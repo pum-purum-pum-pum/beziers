@@ -132,7 +132,7 @@ impl EventHandler for Strokes {
         ctx.apply_bindings(&self.bindings);
         ctx.draw(0, self.indices.len() as i32, 1);
         if let Some(avg) = self.timer.tick() {
-            dbg!(avg);
+            #[cfg(not(target_arch = "wasm32"))]
             println!("{:?} fps", Duration::new(1, 0).as_nanos() / avg.as_nanos());
         }
     }
@@ -141,19 +141,19 @@ impl EventHandler for Strokes {
 mod shader {
     use miniquad::*;
 
-    pub const VERTEX: &str = r#"# version 310 es
+    pub const VERTEX: &str = r#"# version 100
     uniform vec2 resolution;
-    in vec2 pos;
-    in vec2 a;
-    in vec2 control;
-    in vec2 c;
-    in float thickness;
+    attribute vec2 pos;
+    attribute vec2 a;
+    attribute vec2 control;
+    attribute vec2 c;
+    attribute float thickness;
 
-    out vec2 af;
-    out vec2 controlf;
-    out vec2 cf;
-    out vec2 posf;
-    out float thicknessf;
+    varying vec2 af;
+    varying vec2 controlf;
+    varying vec2 cf;
+    varying vec2 posf;
+    varying float thicknessf;
 
     void main() {
         vec2 ps = vec2(2.* pos.x / resolution.x - 1., -2. * pos.y / resolution.y + 1.);
@@ -165,15 +165,14 @@ mod shader {
         gl_Position = vec4(ps, 0., 1.);
     }"#;
 
-    pub const FRAGMENT: &str = r#"# version 310 es
+    pub const FRAGMENT: &str = r#"# version 100
     precision highp float;
-    in vec2 af;
-    in vec2 controlf;
-    in vec2 cf;
-    in vec2 posf;
-    in float thicknessf;
+    varying vec2 af;
+    varying vec2 controlf;
+    varying vec2 cf;
+    varying vec2 posf;
+    varying float thicknessf;
 
-    out vec4 FragColor;
     
     float dot2( in vec2 v ) { return dot(v,v); }
 
@@ -222,9 +221,9 @@ mod shader {
         if (d < 0.) {
             color.a = s;
         } else {
-            color.a = 0.1;
+            discard;
         }
-        FragColor = color;
+        gl_FragColor = color;
     }"#;
 
     pub fn meta() -> ShaderMeta {
@@ -232,7 +231,7 @@ mod shader {
             images: vec![],
             uniforms: UniformBlockLayout {
                 uniforms: vec![UniformDesc::new("resolution", UniformType::Float2)],
-            },
+            }
         }
     }
 }

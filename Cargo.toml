@@ -9,7 +9,6 @@ edition = "2018"
 [dependencies]
 miniquad = "0.3.0-alpha.22"
 glam = { version = "0.10.0", features = ["scalar-math"] }
-rand = "0.7.3"
 
 ["lib"]
 name = "bezier"

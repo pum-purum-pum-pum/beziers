@@ -1,15 +1,5 @@
 use glam::{vec2, Vec2};
 
-pub fn random_strokes(path: &mut BezierPath, (w, h): (f32, f32), n_samples: usize) {
-    use rand::prelude::*;
-    path.clear();
-    let mut rng = rand::thread_rng();
-    for i in 0..n_samples {
-        let val: f32 = rng.gen();
-        path.stroke(vec2(i as f32 * w as f32 / n_samples as f32, val * h as f32));
-    }
-}
-
 #[derive(Clone, Copy, Debug)]
 #[repr(C)]
 pub struct Vertex {
