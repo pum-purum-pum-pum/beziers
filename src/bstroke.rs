@@ -62,8 +62,7 @@ impl Strokes {
                 ..Default::default()
             },
         );
-        let mut path = BezierPath::default();
-
+        let path = BezierPath::default();
 
         let mut stage = Strokes {
             pipeline,
@@ -123,8 +122,7 @@ impl EventHandler for Strokes {
         }
     }
 
-    fn update(&mut self, ctx: &mut Context) {
-    }
+    fn update(&mut self, _ctx: &mut Context) {}
 
     fn draw(&mut self, ctx: &mut Context) {
         let (w, h) = ctx.screen_size();
@@ -225,7 +223,6 @@ mod shader {
             color.a = s;
         } else {
             color.a = 0.1;
-            //discard;
         }
         FragColor = color;
     }"#;

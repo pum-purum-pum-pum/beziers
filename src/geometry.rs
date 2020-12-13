@@ -18,7 +18,6 @@ pub struct Vertex {
     pub thickness: f32,
 }
 
-
 fn clamp(a: f32) -> f32 {
     if a < 0. {
         0.
@@ -209,28 +208,5 @@ impl QuadCurve {
             QuadCurve::new(self.a, q0, r0),
             QuadCurve::new(r0, q1, self.c),
         )
-    }
-
-    /// The point at time t in the curve.
-    pub fn point(&self, t: f32) -> Vec2 {
-        let tm = 1.0 - t;
-        let a = tm * tm;
-        let b = 2.0 * tm * t;
-        let c = t * t;
-
-        let x = a * self.a.x + b * self.control.x + c * self.c.x;
-        let y = a * self.a.y + b * self.control.y + c * self.c.y;
-        Vec2::new(x, y)
-    }
-
-    /// The slope of the tangent line at time t.
-    pub fn slope(&self, t: f32) -> (f32, f32) {
-        let tm = 1.0 - t;
-        let a = 2.0 * tm;
-        let b = 2.0 * t;
-
-        let x = a * (self.control.x - self.a.x) + b * (self.c.x - self.control.x);
-        let y = a * (self.control.y - self.a.y) + b * (self.c.y - self.control.y);
-        (x, y)
     }
 }
